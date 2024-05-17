@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mapfeature_project/Todo/databasehelper.dart';
 import 'package:mapfeature_project/Todo/event_model.dart';
-import 'package:mapfeature_project/helper/allTasks_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -18,7 +17,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-
+import '../helper/allTasks_response.dart';
 
 // import 'package:todo3/databasehelper.dart';
 
@@ -489,8 +488,8 @@ class _HomePageState extends State<HomePage> {
                                                               .toInt(),
                                                       index: index);
                                                   // _deleteEvent(index);
-                                                  // حذف الحدث عند النقر على أيقونة السلة
-                                                  },
+                                                  // حذف الحدث عند النقر على أيقونة السلة},
+                                                },
                                                 child: const Icon(
                                                   Icons.delete,
                                                   color: Colors.white,

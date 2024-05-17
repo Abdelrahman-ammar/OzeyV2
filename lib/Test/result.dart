@@ -1,17 +1,23 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mapfeature_project/main.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class MtResult extends StatefulWidget {
+  
   final int userScore;
+ 
   final int cognitiveScore;
   final int somaticScore;
-  MtResult(
-      {required this.userScore,
+  const MtResult(
+      {Key? key,
+      required this.userScore,
       required this.cognitiveScore,
-      required this.somaticScore});
+      required this.somaticScore})
+      : super(key: key);
 
   @override
   State<MtResult> createState() => _MtResultState();
@@ -20,23 +26,36 @@ class MtResult extends StatefulWidget {
 class _MtResultState extends State<MtResult> {
   @override
   Widget build(BuildContext context) {
+      // Define the recommendation text based on userScore
+    // Define the recommendation text based on userScore
+    String recommendationText = '';
+    if (userScore < 9) {
+      recommendationText = 'Your score is below 9 so its considered normal. Keep up the positive vibe!';
+    } else if (userScore >= 9 && widget.userScore < 24) {
+      recommendationText = 'Your score is above 9 which indicates a moderate level. Why not chat with ';
+    } else if (userScore >= 24) {
+      recommendationText = 'Your score surpasses 24, we strongly recommend that you seek guidance from a mental health professional for an accurate diagnosis. (view doctor map)';
+    }
+
     // تعريف متغير لتحديد النص الذي سيتم عرضه
     String additionalText = '';
-    double percent = (widget.userScore / 63) * 100;
+    
+
+    double percent = (userScore / 63) * 100;
     int roundedPercent = percent.ceil();
 
     // شرط: إذا كانت نتيجة الاختبار تفي بشرط معين
-    if (widget.userScore <= 10 && widget.userScore >= 0) {
+    if (userScore <= 10 && userScore >= 0) {
       additionalText =
           'THE SEVERITY OF DEPRESSION:These ups and downs are considered normal';
-    } else if (widget.userScore <= 16 && widget.userScore > 10) {
+    } else if (userScore <= 16 && userScore > 10) {
       additionalText = 'THE SEVERITY OF DEPRESSION: Mild mood disturbance';
-    } else if (widget.userScore <= 20 && widget.userScore > 16) {
+    } else if (userScore <= 20 && userScore > 16) {
       additionalText =
           'THE SEVERITY OF DEPRESSION: Borderline clinical depression';
-    } else if (widget.userScore <= 30 && widget.userScore > 20) {
+    } else if (userScore <= 30 &&userScore > 20) {
       additionalText = 'THE SEVERITY OF DEPRESSION: Moderate depression';
-    } else if (widget.userScore <= 40 && widget.userScore > 30) {
+    } else if (userScore <= 40 && userScore > 30) {
       additionalText = 'THE SEVERITY OF DEPRESSION: Severe depression';
     } else {
       additionalText = 'THE SEVERITY OF DEPRESSION:Extreme depression';
@@ -80,7 +99,6 @@ class _MtResultState extends State<MtResult> {
                   ),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(top: 18),
                 child: Column(
@@ -95,15 +113,15 @@ class _MtResultState extends State<MtResult> {
                       ),
                     ),
                     const SizedBox(height: 16.0), // مسافة عمودية إضافية
-                    new CircularPercentIndicator(
+                    CircularPercentIndicator(
                       radius: 90.0,
                       animation: true,
                       animationDuration: 1800,
                       lineWidth: 12.0,
-                      percent: ((widget.userScore / 63)),
-                      center: new Text(
+                      percent: ((userScore / 63)),
+                      center: Text(
                         "$roundedPercent %",
-                        style: new TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                             color: const Color(0xFF8ABAC5)),
@@ -117,7 +135,7 @@ class _MtResultState extends State<MtResult> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        'YOU SCORED  ${widget.userScore} FROM 63 ',
+                        'YOU SCORED  $userScore FROM 63 ',
                         style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -130,7 +148,6 @@ class _MtResultState extends State<MtResult> {
                   ],
                 ),
               ),
-
               const SizedBox(
                 height: 8,
               ),
@@ -189,7 +206,7 @@ class _MtResultState extends State<MtResult> {
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: StepProgressIndicator(
                                 totalSteps: 39,
-                                currentStep: widget.somaticScore,
+                                currentStep: somaticScore,
                                 size: 10,
                                 selectedColor: const Color(0xFF1F5D6B),
                                 unselectedColor: Colors.white,
@@ -252,7 +269,7 @@ class _MtResultState extends State<MtResult> {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: StepProgressIndicator(
                             totalSteps: 39,
-                            currentStep: widget.cognitiveScore,
+                            currentStep: cognitiveScore,
                             size: 10,
                             selectedColor: const Color(0xFF1F5D6B),
                             unselectedColor: Colors.white,
@@ -266,7 +283,7 @@ class _MtResultState extends State<MtResult> {
                           padding:
                               const EdgeInsets.symmetric(horizontal: 100.0),
                           child: Text(
-                            'YOU SCORED $cognitiveScore From 33',
+                           'YOU SCORED $cognitiveScore From 33',
                             style: const TextStyle(
                               fontSize: 14.0,
                               color: Colors.black,
@@ -279,6 +296,76 @@ class _MtResultState extends State<MtResult> {
                   ),
                 ],
               ),
+              SizedBox(
+                              height: 20,),
+                 Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: widget.userScore >= 9 && widget.userScore < 24
+                    ? RichText(
+                        text: TextSpan(
+                          text: 'Your score is above 9 which indicates a moderate level. Why not chat with ',
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F5D6B),
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'Ozey',
+                              style: const TextStyle(
+                                color: Colors.red,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {Navigator.pushNamed(context, '/chat');
+                                },
+                            ),
+                            const TextSpan(
+                              text: ' to lighten your load?',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1F5D6B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : widget.userScore >= 24
+                    ? RichText(
+                            text: TextSpan(
+                              text:
+                                  'Your score surpasses 24, we strongly recommend that you seek guidance from a mental health professional for an accurate diagnosis. ',
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1F5D6B),
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: '(view doctor map)',
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushNamed(context, '/googlemap');
+                                    },
+                                ),
+                              ],
+                            ),
+                          )
+                        : Text(
+                            recommendationText,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1F5D6B),
+                            ),
+                          ),
+              ),
+
 
               // باقي محتوى الـ HomeScreen هنا
             ],

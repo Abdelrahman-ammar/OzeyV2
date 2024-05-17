@@ -1,8 +1,14 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, use_key_in_widget_constructors, file_names, depend_on_referenced_packages, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mapfeature_project/Test/Health.dart';
 import 'package:mapfeature_project/Test/result.dart';
-import 'package:mapfeature_project/main.dart';
+import 'package:mapfeature_project/helper/show_snack_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:http/http.dart' as http;
 
 class LossOFInterest extends StatefulWidget {
   @override
@@ -11,6 +17,9 @@ class LossOFInterest extends StatefulWidget {
 
 class _LossOFInterest extends State<LossOFInterest> {
   String selectedOption = '';
+  int userScore = 0;
+  int cognitiveScore = 0;
+  int somaticScore = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +63,6 @@ class _LossOFInterest extends State<LossOFInterest> {
           const Padding(
             padding: EdgeInsets.all(16.0),
           ),
-
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             padding: const EdgeInsets.all(16.0),
@@ -64,7 +72,7 @@ class _LossOFInterest extends State<LossOFInterest> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: const Text(
-              '21.  Loss of interest in sex',
+              '21. Loss of interest in sex',
               style: TextStyle(
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
@@ -74,8 +82,7 @@ class _LossOFInterest extends State<LossOFInterest> {
           ),
           const SizedBox(height: 16.0),
           RadioListTile<String>(
-            title: const Text(
-                'I have not noticed any recent change in my interest in sex .'),
+            title: const Text('I have not noticed any recent change in my interest in sex.'),
             groupValue: selectedOption,
             value: 'a',
             onChanged: (value) {
@@ -85,7 +92,6 @@ class _LossOFInterest extends State<LossOFInterest> {
             },
             activeColor: const Color(0xFF8ABAC5),
           ),
-
           RadioListTile<String>(
             title: const Text('I am less interested in sex than I used to be.'),
             groupValue: selectedOption,
@@ -133,7 +139,9 @@ class _LossOFInterest extends State<LossOFInterest> {
             icon: GestureDetector(
               onTap: () {
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => Health()));
+                  context,
+                  MaterialPageRoute(builder: (context) => Health()),
+                );
               },
               child: const Icon(Icons.navigate_before),
             ),
@@ -142,15 +150,12 @@ class _LossOFInterest extends State<LossOFInterest> {
           BottomNavigationBarItem(
             icon: GestureDetector(
               onTap: () {
+                postDataToApi();
+                print(userScore);
+                print(cognitiveScore);
+                print(somaticScore);
+                print(DateFormat('yyyy/MM/dd').format(DateTime.now()).replaceAll('/', '-'));
                 // تحويل للشاشة التي تأتي بعد الشاشة الحالية
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MtResult(
-                              userScore: userScore,
-                              cognitiveScore: cognitiveScore,
-                              somaticScore: somaticScore,
-                            )));
               },
               child: const Icon(Icons.navigate_next),
             ),
@@ -158,27 +163,47 @@ class _LossOFInterest extends State<LossOFInterest> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 16.0),
-              Text(
-                '@“Let’s Start…”',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              // Add more Drawer items if needed
-            ],
+    );
+  }
+  postDataToApi() async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    String? token = prefs.getString('token');
+    String? id = prefs.getString('id');
+    print(id);
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var response = await http.post(
+      Uri.parse('https://mental-health-ef371ab8b1fd.herokuapp.com/api/testscore'),
+      body: {
+        "totalscores": userScore.toString(),
+        "mentalscores": cognitiveScore.toString(),
+        "phyicalscores": somaticScore.toString(),
+        "user_id": id,
+        "date": DateFormat('yyyy/MM/dd').format(DateTime.now()).replaceAll('/', '-')
+      },
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String, dynamic> data = jsonDecode(response.body);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MtResult(
+            userScore: userScore,
+            cognitiveScore: cognitiveScore,
+            somaticScore: somaticScore,
           ),
         ),
-      ),
-    );
+      );
+      showSnackBar(context, data['message']);
+    } else {
+      print(response.reasonPhrase);
+      showSnackBar(context, 'Failed to submit data: ${response.reasonPhrase}');
+    }
   }
 }

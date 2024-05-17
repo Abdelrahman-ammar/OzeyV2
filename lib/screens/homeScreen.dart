@@ -10,6 +10,7 @@ import 'package:mapfeature_project/moodTracer/mood_selector.dart';
 import 'package:mapfeature_project/moodTracer/sentiment.dart';
 import 'package:mapfeature_project/screens/ChatScreen.dart';
 import 'package:mapfeature_project/moodTracer/graph.dart';
+import 'package:mapfeature_project/screens/report_home.dart';
 import 'package:mapfeature_project/widgets/decoration.dart';
 
 class HOMEScreen extends StatefulWidget {
@@ -187,6 +188,10 @@ class _HOMEScreenState extends State<HOMEScreen> {
                         padding: const EdgeInsets.only(left: 90.0),
                         child: ElevatedButton(
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Report()));
                             //navigation
                           },
                           style: ElevatedButton.styleFrom(

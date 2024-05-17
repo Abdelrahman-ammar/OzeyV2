@@ -1,11 +1,17 @@
+// ignore_for_file: file_names, depend_on_referenced_packages, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously, unnecessary_string_interpolations, unnecessary_brace_in_string_interps, unused_element, deprecated_member_use
+
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mapfeature_project/screens/resetpassScreen.dart';
 import 'dart:io';
 import 'package:mapfeature_project/screens/settings.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+
+import '../helper/show_snack_bar.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String? email;
@@ -28,13 +34,10 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   File? _selectedImage;
-  TextEditingController fullNameController = TextEditingController();
-
-  TextEditingController phoneNumberController =
-      TextEditingController(text: '01033886818');
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
   String? selectedGender;
-  TextEditingController dobController =
-      TextEditingController(text: "22/2/2002");
   bool showPassword = false;
   bool isEditMode = false;
 
@@ -43,12 +46,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
 
     // Initialize the controllers with default values
-    fullNameController.text = widget.name ?? "";
-    phoneNumberController.text = '01033886818';
-    selectedGender = null;
-    dobController.text = "22/2/2002";
-
+    // fullNameController.text = widget.name ?? "";
+    // phoneNumberController.text = '01033886818';
+    // dobController.text = "22/2/2002";
     _fetchProfileData();
+    selectedGender = null;
   }
 
   Future<void> _fetchProfileData() async {
@@ -67,22 +69,68 @@ class _EditProfilePageState extends State<EditProfilePage> {
       headers: headers,
     );
 
-    if (mounted) {
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
 
-        setState(() {
-          fullNameController.text = responseData['name'] ?? '';
-          phoneNumberController.text = responseData['phone'] ?? '';
-          selectedGender = responseData['gender'];
-          dobController.text = responseData['DOB'] ?? '';
-          // Update other fields if needed
-        });
-      } else {
-        print("Error: ${response.body}");
-      }
+      setState(() {
+        fullNameController.text = responseData['name'] ?? '';
+        phoneNumberController.text = responseData['phone'] ?? '';
+        selectedGender = responseData['gender'].toLowerCase(); //Abdo5 there was a mismatch between what was returned from the API and the dropdownlistMenuItems
+        dobController.text = responseData['DOB'] ?? '';
+        _selectedImage = File(responseData['image']);
+        // Update other fields if needed
+      });
+      print(_selectedImage);
+    } else {
+      print("Error: ${response.body}");
     }
   }
+
+  Future<void> _postData() async {
+    print(MultipartFile.fromFile(_selectedImage!.path,
+            filename: _selectedImage!.path.split('/').last)
+        .toString());
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      // 'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}'
+    };
+    String url =
+        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile';
+
+    http.Response response =
+        await http.post(Uri.parse(url), headers: headers, body: {
+      'files': [
+        await MultipartFile.fromFile(_selectedImage!.path,
+            filename: _selectedImage!.path.split('/').last)
+      ].toString(),
+      'id': widget.userId,
+      'name': fullNameController.text,
+      'phone': '0${phoneNumberController.text}',
+      'gender': selectedGender,
+      'DOB': dobController.text.replaceAll('-', '/'),
+      '_method': 'PUT'
+    });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      showSnackBar(context, responseData['message']);
+      print('sddsad');
+      setState(() {
+        isEditMode = false;
+        _fetchProfileData(); // Exit edit mode
+      });
+    } else {
+      print(response.reasonPhrase);
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print('object');
+      print(responseData['message']);
+      setState(() {
+        isEditMode = true; // Exit edit mode
+      });
+      showSnackBar(context, responseData['message']);
+    }
+  }
+
 
   @override
   void dispose() {
@@ -110,12 +158,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
         title: const Text('       Personal Info'),
         actions: [
           if (isEditMode) // Show save button only in edit mode
+
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isEditMode = false; // Exit edit mode
-                });
-                // Save functionality
+              onPressed: () async {
+                // print(fullNameController.text);      //Abdo2 These prints the data when pressing save
+                // print(phoneNumberController.text);
+                // print(selectedGender);
+                // print(dobController.text);
+
+                // Map gender string to an integer
+                // String? gender;
+                // if (selectedGender == "Male") {
+                //   gender = 'male';
+                // } else if (selectedGender == "Female") { //Abdo3 Made changes here 3
+                //   gender = 'female';
+                // }
+
+                if (selectedGender != null) {
+                  await _saveProfile(
+                    name: fullNameController.text,
+                    gender: selectedGender!.toLowerCase(),
+                    phone: phoneNumberController.text,
+                    dob: dobController.text,
+                  );
+                } else {
+                  showSnackBar(context, "Please select a gender.");
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFB7C3C5),
@@ -139,9 +207,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               color: Colors.black,
             ),
             onPressed: () {
+              if (isEditMode==false){  //Abdo4 the edit icon works as a switch on/off for save to appear 
               setState(() {
                 isEditMode = !isEditMode; // Toggle edit mode
               });
+              }
             },
           ),
         ],
@@ -184,12 +254,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }
                         },
                         child: CircleAvatar(
-                          backgroundImage: _selectedImage != null
-                              ? FileImage(_selectedImage!)
-                                  as ImageProvider<Object>
-                              : const AssetImage(
-                                  "images/photo_2024-01-17_04-23-53-removebg-preview.png"),
-                        ),
+                            backgroundImage: _selectedImage == null
+                                ? const AssetImage(
+                                    "images/photo_2024-01-17_04-23-53-removebg-preview.png")
+                                : NetworkImage(_selectedImage!.path)
+                                    as ImageProvider<Object>),
                       ),
                     ),
                   ),
@@ -404,14 +473,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: DropdownButtonFormField<String>(
-        value: selectedGender,
         onChanged: isEditMode
             ? (value) {
                 setState(() {
-                  selectedGender = value;
+                  selectedGender = value!;
                 });
               }
-            : null, // Disable onChanged outside edit mode
+            : null,
+        value: selectedGender,
+// Disable onChanged outside edit mode
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey[100],
@@ -420,7 +490,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             borderRadius: BorderRadius.circular(35),
           ),
         ),
-        items: ["Male", "Female"].map((String gender) {
+        items: <String>["male", 'female'].map((String gender) {
           return DropdownMenuItem<String>(
             value: gender,
             child: Text(gender),
@@ -430,48 +500,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Future<void> _saveProfile() async {
+  Future<void> _saveProfile({
+    required String name,
+    required String gender,
+    required String phone,
+    required String dob,
+  }) async {
     // Prepare the request body
     Map<String, dynamic> requestBody = {
-      "name": fullNameController.text,
-      "phone": phoneNumberController.text,
-      "gender": selectedGender,
-      "DOB": dobController.text,
-      // You can add 'image' field here if needed
+      'id' : widget.userId,    //Abdo 1 , the id was not sent
+      'name': name,
+      'phone': phone,
+      'gender': gender,
+      'DOB': dob,
+      '_method': 'PUT'
     };
 
     // Prepare the headers
     Map<String, String> headers = {
-      "Authorization": "Bearer ${widget.token}",
-      "Accept": "application/json",
-      "Content-Type": "application/json",
+      'Authorization': 'Bearer ${widget.token}',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
     };
 
-    // Make the HTTP POST request to update the profile
-    http.Response response = await http.post(
+    // Make the HTTP PUT request to update the profile
+    http.Response response = await http.put(
       Uri.parse(
-          "https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile"),
+          'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile'),
       headers: headers,
       body: json.encode(requestBody),
     );
 
     // Parse the response
     if (response.statusCode == 200) {
-      // Successful update
-      // Fetch the latest profile data from the API
-      await _fetchProfileData();
-      // You can display a success message or perform any other actions here
+      print('Profile updated successfully');
+      // Optionally, fetch the profile data again
+      // await _fetchProfileData();
     } else {
-      // Error occurred
-      print("Error: ${response.body}");
-      // You can display an error message to the user
-      // or handle the error in any appropriate way for your app
+      print('Error: ${response.body}');
     }
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    if (!isEditMode) return; // Exit if not in edit mode
-
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -480,19 +550,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
     if (pickedDate != null) {
       setState(() {
-        dobController.text =
-            "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+        dobController.text = DateFormat('yyyy/MM/dd').format(pickedDate);
       });
     }
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
+  final picker = ImagePicker();
+
+  //Image Picker function to get image from gallery
+
+  Future _pickImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
         _selectedImage = File(pickedFile.path);
-      });
-    }
+      }
+    });
   }
 }
