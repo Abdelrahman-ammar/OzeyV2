@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapfeature_project/helper/constants.dart';
+import 'package:mapfeature_project/models/music.dart';
+import 'package:mapfeature_project/views/music_list.dart';
 
 class HeadlineText extends StatelessWidget {
   final String text;
@@ -36,7 +38,10 @@ class HintText extends StatelessWidget {
   }
 }
 
-class RecommendationsScreen extends StatelessWidget {
+class RecommendationsScreen extends StatelessWidget {final List<Music> playlist;
+
+  RecommendationsScreen({required this.playlist});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +119,7 @@ class RecommendationsScreen extends StatelessWidget {
                               HintText(
                                 text:
                                     ' mental health by providing stress relief',
-                              ),
+                                    ),
                               HintText(
                                 text:
                                     ' and fostering empathy through escapism.',
@@ -143,8 +148,13 @@ class RecommendationsScreen extends StatelessWidget {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, 'music');
-                },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(playlist: playlist),
+        ),
+      );
+    },
                 child: Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(
@@ -214,7 +224,7 @@ class RecommendationsScreen extends StatelessWidget {
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
-                  ),
+                    ),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),

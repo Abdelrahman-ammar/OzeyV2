@@ -88,17 +88,6 @@ class _MtResultState extends State<MtResult> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'We strongly recommend that you consult a mental health professional for a correct diagnosis if your level of depression is above average',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F5D6B),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(top: 18),
                 child: Column(
