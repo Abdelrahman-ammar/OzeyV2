@@ -170,7 +170,8 @@ class _LossOFInterest extends State<LossOFInterest> {
     final SharedPreferences prefs = await _prefs;
     String? token = prefs.getString('token');
     String? id = prefs.getString('id');
-    print(id);
+    // print(id);
+    print(token);  //Abdo1 the token exists but the id isn't
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
@@ -202,6 +203,7 @@ class _LossOFInterest extends State<LossOFInterest> {
       );
       showSnackBar(context, data['message']);
     } else {
+      print("eerrrrorrr");
       print(response.reasonPhrase);
       showSnackBar(context, 'Failed to submit data: ${response.reasonPhrase}');
     }

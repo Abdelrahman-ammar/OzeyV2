@@ -104,7 +104,8 @@ class _LogInScreenState extends State<LogInScreen> {
           String userId = responseData['id'].toString();
           String name = responseData['name'];
           String userEmail = responseData['email'];
-
+          print(userId);
+          setUserId(userId);
           // Token is valid, navigate to home screen
           Navigator.pushReplacement(
             context,
@@ -147,6 +148,10 @@ class _LogInScreenState extends State<LogInScreen> {
 
   String getToken() {
     return sharedPreferences.getString('token') ?? '';
+  }
+
+  Future<void> setUserId (String userid) async{
+    await sharedPreferences.setString("id", userid);
   }
 
   @override

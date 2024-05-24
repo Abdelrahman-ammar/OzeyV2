@@ -1,13 +1,14 @@
 // ignore_for_file: file_names, depend_on_referenced_packages, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously, unnecessary_string_interpolations, unnecessary_brace_in_string_interps, unused_element, deprecated_member_use
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
+// import 'dart:html';
+import 'package:dio/dio.dart' as dio;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mapfeature_project/screens/resetpassScreen.dart';
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:mapfeature_project/screens/settings.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
@@ -19,6 +20,8 @@ class EditProfilePage extends StatefulWidget {
   final String userId;
   final String token;
   final String? name;
+  late String? profileImageUrl;
+
 
   EditProfilePage({
     this.email,
@@ -33,7 +36,8 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  File? _selectedImage;
+  io.File? _selectedImage;
+  String? _uploadedImageUrl;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
@@ -45,10 +49,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
 
-    // Initialize the controllers with default values
-    // fullNameController.text = widget.name ?? "";
-    // phoneNumberController.text = '01033886818';
-    // dobController.text = "22/2/2002";
+    
     _fetchProfileData();
     selectedGender = null;
   }
@@ -77,60 +78,158 @@ class _EditProfilePageState extends State<EditProfilePage> {
         phoneNumberController.text = responseData['phone'] ?? '';
         selectedGender = responseData['gender'].toLowerCase(); //Abdo5 there was a mismatch between what was returned from the API and the dropdownlistMenuItems
         dobController.text = responseData['DOB'] ?? '';
-        _selectedImage = File(responseData['image']);
+        _selectedImage = io.File(responseData['image']);
+         
         // Update other fields if needed
       });
-      print(_selectedImage);
+      print("this is the  $_selectedImage");
+      print(_selectedImage!.path); 
     } else {
       print("Error: ${response.body}");
     }
   }
 
-  Future<void> _postData() async {
-    print(MultipartFile.fromFile(_selectedImage!.path,
-            filename: _selectedImage!.path.split('/').last)
-        .toString());
-    Map<String, String> headers = {
-      'Accept': 'application/json',
-      // 'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}'
-    };
-    String url =
-        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile';
 
-    http.Response response =
-        await http.post(Uri.parse(url), headers: headers, body: {
-      'files': [
-        await MultipartFile.fromFile(_selectedImage!.path,
-            filename: _selectedImage!.path.split('/').last)
-      ].toString(),
-      'id': widget.userId,
-      'name': fullNameController.text,
-      'phone': '0${phoneNumberController.text}',
-      'gender': selectedGender,
-      'DOB': dobController.text.replaceAll('-', '/'),
-      '_method': 'PUT'
-    });
+//  Future<void> _saveProfile({
+//     required String name,
+//     required String gender,
+//     required String phone,
+//     required String dob,
+//   }) async {
+//     // Prepare the request body
+//     Map<String, dynamic> requestBody = {
+//       'id' : widget.userId,    //Abdo 1 , the id was not sent
+//       'name': name,
+//       'phone': phone,
+//       'gender': gender,
+//       'DOB': dob,
+//       '_method': 'PUT'
+//     };
+
+//     // Prepare the headers
+//     Map<String, String> headers = {
+//       'Authorization': 'Bearer ${widget.token}',
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json',
+//     };
+
+//     // Make the HTTP PUT request to update the profile
+//     http.Response response = await http.put(
+//       Uri.parse(
+//           'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile'),
+//       headers: headers,
+//       body: json.encode(requestBody),
+//     );
+
+//     // Parse the response
+//     if (response.statusCode == 200) {
+//       print('Profile updated successfully');
+//       // Optionally, fetch the profile data again
+//       // await _fetchProfileData();
+//     } else {
+//       print('Error: ${response.body}');
+//     }
+//   }
+
+
+
+
+
+
+
+
+
+
+  Future<void> _postData({
+  required String name,
+  required String? gender,
+  required String phone,
+  required String dob,
+  required io.File? image,
+}) async {
+  // Print the path of the image
+  print('Image Path: ${image!.path}');
+
+  
+  
+  dio.MultipartFile imageFile = await dio.MultipartFile.fromFile(
+    image.path,
+    filename: image.path.split('/').last,
+  );
+  
+  print("this one");
+  // print(imageFile.toString());
+
+  Map<String, String> headers = {
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ${widget.token}',
+  };
+
+  String url = 'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile';
+
+  dio.FormData formData = dio.FormData.fromMap({
+    'image': imageFile, // Use 'file' as the key for the image
+    'id': widget.userId,
+    'name': name,
+    'phone': phone,
+    'gender': gender,
+    'DOB': dob.replaceAll('-', '/'),
+    '_method': 'PUT',
+  });
+
+  // if (image != null) {
+  //   formData.files.add(MapEntry(
+  //     'image',
+  //     await dio.MultipartFile.fromFile(
+  //       image.path,
+  //       filename: image.path.split('/').last,
+  //     ),
+  //   ));
+  //   print("image is not null");
+  // }
+  // else{
+  //   print("image is null");
+  // }
+  // print(formData);
+  formData.fields.forEach((element) {
+    print('Field: ${element.key}, Value: ${element.value}');
+  });
+  dio.Dio dioClient = dio.Dio();
+
+  try {
+    dio.Response response = await dioClient.post(
+      url,
+      data: formData,
+      options: dio.Options(headers: headers),
+    );
+
     if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = json.decode(response.body);
+      Map<String, dynamic> responseData = response.data;
       showSnackBar(context, responseData['message']);
       print('sddsad');
-      setState(() {
-        isEditMode = false;
-        _fetchProfileData(); // Exit edit mode
-      });
+
+      // setState(() {
+        // _uploadedImageUrl = responseData["image"];
+        // _selectedImage = null;
+        // isEditMode = false;
+        // _fetchProfileData();
+      // });
     } else {
-      print(response.reasonPhrase);
-      Map<String, dynamic> responseData = json.decode(response.body);
+      print(response.statusMessage);
+      Map<String, dynamic> responseData = response.data;
       print('object');
       print(responseData['message']);
-      setState(() {
-        isEditMode = true; // Exit edit mode
-      });
+
+      // setState(() {
+        // isEditMode = true;
+      // });
       showSnackBar(context, responseData['message']);
     }
+  } catch (e) {
+    print('Error: $e');
+    showSnackBar(context, 'An error occurred');
   }
-
+}
 
   @override
   void dispose() {
@@ -175,12 +274,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 // }
 
                 if (selectedGender != null) {
-                  await _saveProfile(
+                  await _postData(
                     name: fullNameController.text,
                     gender: selectedGender!.toLowerCase(),
                     phone: phoneNumberController.text,
                     dob: dobController.text,
+                    image: _selectedImage,
                   );
+
+                  setState(() { //Abdo7 this should be added to the if condition indicating only saves if the request was sent succesfully . look at Abdo6
+                    isEditMode = false;
+                  });
                 } else {
                   showSnackBar(context, "Please select a gender.");
                 }
@@ -207,7 +311,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               color: Colors.black,
             ),
             onPressed: () {
-              if (isEditMode==false){  //Abdo4 the edit icon works as a switch on/off for save to appear 
+              if (isEditMode==false){  ///Abdo4 the edit icon works as a switch on/off for save to appear 
               setState(() {
                 isEditMode = !isEditMode; // Toggle edit mode
               });
@@ -254,11 +358,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }
                         },
                         child: CircleAvatar(
-                            backgroundImage: _selectedImage == null
-                                ? const AssetImage(
-                                    "images/photo_2024-01-17_04-23-53-removebg-preview.png")
-                                : NetworkImage(_selectedImage!.path)
-                                    as ImageProvider<Object>),
+                              backgroundImage: _selectedImage != null
+                              ? FileImage(_selectedImage!)
+                              : (_uploadedImageUrl != null
+                              ? NetworkImage(_uploadedImageUrl!) as ImageProvider
+                              : const AssetImage("images/photo_2024-01-17_04-23-53-removebg-preview.png")),
+                              radius: 50,
+                              ),
                       ),
                     ),
                   ),
@@ -560,12 +666,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   //Image Picker function to get image from gallery
 
   Future _pickImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
     setState(() {
-      if (pickedFile != null) {
-        _selectedImage = File(pickedFile.path);
-      }
+       _selectedImage = io.File(pickedFile.path);
     });
+    
+  }
+  else{
+    print("image not picked");
+  }
   }
 }
