@@ -432,9 +432,9 @@ class _ReportState extends State<Report> {
     String? token = prefs.getString('token');
     String? id = prefs.getString('id');
     
-    print(token);
-    print(id);
-    print("ttttttttttttttttttttttttttttttttt");
+    // print(token);
+    // print(id);
+    // print("ttttttttttttttttttttttttttttttttt");
     final response = await http.get(
       Uri.parse(
           'https://mental-health-ef371ab8b1fd.herokuapp.com/api/taskslast7days/$id'),
@@ -450,9 +450,9 @@ class _ReportState extends State<Report> {
         final List<IndexTasks> indexTasks = [
           IndexTasks.fromJson(responseData)
         ]; // Create a list with a single object
-        print(indexTasks[0].Tasks);
-        print(indexTasks[0].completed);
-        print(indexTasks[0].not_completed);
+        // print(indexTasks[0].Tasks);
+        // print(indexTasks[0].completed);
+        // print(indexTasks[0].not_completed);
         _percent = (indexTasks[0].completed / indexTasks[0].Tasks).clamp(0, 1);
         // _percent = 0.3;
         // print(_percent);

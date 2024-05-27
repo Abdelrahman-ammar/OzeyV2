@@ -7,10 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:mapfeature_project/screens/resetpassScreen.dart';
 import 'dart:io' as io;
-import 'package:mapfeature_project/screens/settings.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:mapfeature_project/screens/soothe_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/show_snack_bar.dart';
 
@@ -75,6 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       setState(() {
         fullNameController.text = responseData['name'] ?? '';
+        // fullNameController.text = CachHelper.getFirstName();
         phoneNumberController.text = responseData['phone'] ?? '';
         selectedGender = responseData['gender'].toLowerCase(); //Abdo5 there was a mismatch between what was returned from the API and the dropdownlistMenuItems
         dobController.text = responseData['DOB'] ?? '';
@@ -145,17 +148,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   required String? gender,
   required String phone,
   required String dob,
-  required io.File? image,
+  // required io.File? image,
 }) async {
   // Print the path of the image
-  print('Image Path: ${image!.path}');
+  // print('Image Path: ${image!.path}');
 
   
   
-  dio.MultipartFile imageFile = await dio.MultipartFile.fromFile(
-    image.path,
-    filename: image.path.split('/').last,
-  );
+  // dio.MultipartFile imageFile = await dio.MultipartFile.fromFile(
+    // image.path,
+    // filename: image.path.split('/').last,
+  // );
   
   print("this one");
   // print(imageFile.toString());
@@ -168,7 +171,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String url = 'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile';
 
   dio.FormData formData = dio.FormData.fromMap({
-    'image': imageFile, // Use 'file' as the key for the image
+    // 'image': imageFile, // Use 'file' as the key for the image
     'id': widget.userId,
     'name': name,
     'phone': phone,
@@ -279,7 +282,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     gender: selectedGender!.toLowerCase(),
                     phone: phoneNumberController.text,
                     dob: dobController.text,
-                    image: _selectedImage,
+                    // image: _selectedImage,
                   );
 
                   setState(() { //Abdo7 this should be added to the if condition indicating only saves if the request was sent succesfully . look at Abdo6
@@ -311,6 +314,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               color: Colors.black,
             ),
             onPressed: () {
+              // _saveProfile({});
               if (isEditMode==false){  ///Abdo4 the edit icon works as a switch on/off for save to appear 
               setState(() {
                 isEditMode = !isEditMode; // Toggle edit mode
@@ -475,14 +479,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               height: 10,
             ),
             GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SettingsPage()), // تستبدل SecondScreen بشاشة الوجهة الثانية الخاصة بك
-                  );
-                },
+                onTap: 
+                  _logout
+                ,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 10.0),
@@ -506,6 +505,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
+
+    Future<void> _logout() async {
+
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    String? token = prefs.getString('token');
+    final response = await http.post(
+      Uri.parse(
+          'https://mental-health-ef371ab8b1fd.herokuapp.com/api/logout'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200){
+      final dynamic responseData = jsonDecode(response.body);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+        builder: (context) => sotheeScreen()));
+        showSnackBar(context, responseData["message"]);
+
+      }
+  }
+
+
+
+
+
+
+
 
   Widget buildTextField(String labelText, TextEditingController controller,
       {VoidCallback? onTap}) {

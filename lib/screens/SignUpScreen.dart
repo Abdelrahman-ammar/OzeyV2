@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapfeature_project/NavigationBar.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:mapfeature_project/helper/constants.dart';
 import 'package:mapfeature_project/helper/show_snack_bar.dart';
 import 'package:mapfeature_project/moodTracer/sentiment.dart';
@@ -25,6 +26,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? password;
   String? confirmPassword;
   bool isLoading = false;
+
+  // CachHelper.setEmail(userInfo = email);
 
   GlobalKey<FormState> formKey = GlobalKey();
   String? _confirmPasswordError;
@@ -88,6 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CustomFormTextField(
                           onChanged: (data) {
                             name = data;
+                            CachHelper.setFirstName(userInfo: name!);
                           },
                           hintText: 'Full Name',
                         ),
@@ -95,6 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CustomFormTextField(
                           onChanged: (data) {
                             email = data;
+                            CachHelper.setEmail(email: email!);
                           },
                           hintText: 'Email',
                           validator: (data) {
