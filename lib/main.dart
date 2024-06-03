@@ -103,7 +103,6 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '37K1OCMlu7tBZx3lz6hGP6'),
       Music(trackId: '6mg7SM5eDp6HzTBwoqkQIn'),
       Music(trackId: '3uK3G29no1DduH1wpVXXtc'),//Oak Island
-      // Music(trackId: '3uK3G29no1DduH1wpVXXtc'),
       Music(trackId: '3T2eXi6Ivi1ZO7pInx3PVC'),//Brand New Day
       Music(trackId: '4Ht8HnNrI7sAYqjybljyHr'),
       Music(trackId: '46Smq12dhbzHYbbSHTZXNR'),
@@ -152,16 +151,14 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '3lVAkecZVvyVRN53fDEASP'),
       Music(trackId: '2HnZ5pp0T0vhjMW8m2x6Hs'),
       Music(trackId: '7KRICZbYxrxBrBTClIZcBo'),
-      // Music(trackId: '7KRICZbYxrxBrBTClIZcBo'),
       Music(trackId: '2BAeqkE0AKWTajWXbNUUyz'),
       Music(trackId: '36Cjfu2S4G6jHkpYmJqUYs'),
-      // Music(trackId: '36Cjfu2S4G6jHkpYmJqUYs'),
       Music(trackId: '5NCtQmyp47aPi0luJKLwPm'),
       Music(trackId: '29CvytNz97GUizS5nepd1j'),
       Music(trackId: '0QVS7EEH4VPQCuBQLkGdNf'),
       Music(trackId: '0BBWKfGu2F1YrFWaZEwiil'),
-      Music(trackId: '0BBWKfGu2F1YrFWaZEwiil'),
-      Music(trackId: '2tUtuhOCtTvuUUa7I4ovLF'),
+      Music(trackId: '78PEAdrjwrZIbcmMAZOKgL'),
+      Music(trackId: '1eId10kDzzYZaEd263nboS'),
     ];
 
     super.initState();

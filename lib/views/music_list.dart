@@ -274,6 +274,12 @@ class MyHomePage extends StatelessWidget {
           }else if (index == 79) {
             songName = 'Surah Al Anbiya';
             artistName = 'Omar Hisham';
+          }else if (index == 80) {
+            songName = 'Surah Al Moamnon';
+            artistName = 'Yasser EL Dossery';
+          }else if (index == 81) {
+            songName = 'Surah Yasin';
+            artistName = 'Meshari Rashid El Afassy';
           }
 
           return GestureDetector(
