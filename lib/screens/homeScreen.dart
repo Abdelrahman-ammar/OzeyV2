@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:mapfeature_project/helper/constants.dart';
 import 'package:mapfeature_project/moodTracer/mood_selector.dart';
 import 'package:mapfeature_project/moodTracer/sentiment.dart';
@@ -52,14 +53,16 @@ class _HOMEScreenState extends State<HOMEScreen> {
   }
 
   void loadMoodData() async {
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     final url =
-        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user_moods/${widget.userId}';
+        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user_moods/${id}';
 
     final response = await http.get(
       Uri.parse(url),
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${widget.token}',
+        'Authorization': 'Bearer ${token}',
       },
     );
 
@@ -502,6 +505,6 @@ class _HOMEScreenState extends State<HOMEScreen> {
     setState(() {
       selectedMoodPercentage = moodPercentage;
     });
-    _postMood(widget.userId, moodPercentage);
+    _postMood(CachHelper.getUserId(), moodPercentage);
   }
 }

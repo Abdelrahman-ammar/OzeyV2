@@ -251,9 +251,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if (response.statusCode == 200) {
+        await CachHelper.init();
         final responseData = json.decode(response.body);
         final userId = responseData['id'].toString();
-
+        CachHelper.setUserId(userInfo: userId);
+        CachHelper.setEmail(email: email!);
+        CachHelper.setFirstName(userInfo: name!);
         // Navigate to the OTP screen with the user ID
         Navigator.push(
           context,

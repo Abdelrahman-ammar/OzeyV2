@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapfeature_project/NavigationBar.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:mapfeature_project/helper/show_snack_bar.dart';
 import 'package:mapfeature_project/moodTracer/sentiment.dart';
 import 'package:mapfeature_project/widgets/customButton.dart';
@@ -131,8 +132,13 @@ class _OtpScreenState extends State<OtpScreen> {
 
       if (response.statusCode == 200) {
         // Parse the response JSON
+        print("verify");
         Map<String, dynamic> responseData = jsonDecode(response.body);
 
+        // CachHelper.setEmail(email: responseData['email']);
+        // CachHelper.setFirstName(userInfo: responseData['name']);
+        // CachHelper.setUserId(userInfo: responseData['id'].toString());
+        // CachHelper.setToken(userInfo: responseData['token']);
         // Extract required fields
         String id = responseData['id'].toString();
         String name = responseData['Name'];

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 
 class ExpenseGraphDesign extends StatefulWidget {
   final bool isLeftPressed1;
@@ -30,10 +31,12 @@ class _ExpenseGraphDesignState extends State<ExpenseGraphDesign> {
 
     print('getEmojes7dayes');
 
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     int userId = int.parse(id!);
     var headers = {
       'Accept': 'application/json',
@@ -73,10 +76,12 @@ class _ExpenseGraphDesignState extends State<ExpenseGraphDesign> {
   }
 
   getEmojes30dayes() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'

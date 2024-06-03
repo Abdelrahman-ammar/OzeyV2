@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapfeature_project/NavigationBar.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:mapfeature_project/helper/constants.dart';
 import 'package:mapfeature_project/helper/show_snack_bar.dart';
 import 'package:mapfeature_project/moodTracer/sentiment.dart';
@@ -37,15 +38,22 @@ class _LogInScreenState extends State<LogInScreen> {
   void initState() {
     super.initState();
 
-    SharedPreferences.getInstance().then((prefs) {
-      sharedPreferences = prefs;
+    // SharedPreferences.getInstance().then((prefs) {
+      // sharedPreferences = prefs;
 
-      validateToken();
-    });
+      // validateToken();
+    // });
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    validateToken();
+    print("workin on it");
   }
 
   Future<void> validateToken() async {
     try {
+      await CachHelper.init();
       showDialog(
         // barrierColor: Colors.white,
         context: context,
@@ -86,8 +94,8 @@ class _LogInScreenState extends State<LogInScreen> {
           );
         },
       );
-
-      String? token = getToken();
+      // await CachHelper.init();
+      String? token = await CachHelper.getToken();
       if (token != null && token.isNotEmpty) {
         final response = await http.get(
           Uri.parse(
@@ -105,7 +113,8 @@ class _LogInScreenState extends State<LogInScreen> {
           String name = responseData['name'];
           String userEmail = responseData['email'];
           print(userId);
-          setUserId(userId);
+         await CachHelper.setUserId(userInfo: userId);
+          // setUserId(userId);
           // Token is valid, navigate to home screen
           Navigator.pushReplacement(
             context,
@@ -142,17 +151,17 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 
-  Future<void> setToken(String token) async {
-    await sharedPreferences.setString('token', token);
-  }
+  // Future<void> setToken(String token) async {
+    // await sharedPreferences.setString('token', token);
+  // }
 
-  String getToken() {
-    return sharedPreferences.getString('token') ?? '';
-  }
+  // String getToken() {
+    // return sharedPreferences.getString('token') ?? '';
+  // }
 
-  Future<void> setUserId (String userid) async{
-    await sharedPreferences.setString("id", userid);
-  }
+  // Future<void> setUserId (String userid) async{
+    // await sharedPreferences.setString("id", userid);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -358,6 +367,8 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<void> loginUser() async {
+    print("in logging in");
+    await CachHelper.init();
     try {
       final response = await http.post(
         Uri.parse('https://mental-health-ef371ab8b1fd.herokuapp.com/api/login'),
@@ -369,20 +380,27 @@ class _LogInScreenState extends State<LogInScreen> {
           'password': password!,
         }),
       );
-
+      print(email);
       if (response.statusCode == 200) {
+        print("we are ok");
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String userId = responseData['id'].toString();
+        CachHelper.setUserId(userInfo: userId);
         String name = responseData['Name'];
+        CachHelper.setFirstName(userInfo: name);
         String userEmail = responseData['email'];
+        CachHelper.setEmail(email: userEmail);
         String token = responseData['token'];
+        CachHelper.setToken(userInfo: token);
+        
 
+        _fetchProfileData(token , userId);
         print('User ID: $userId');
         print('Name: $name');
         print('Email: $userEmail');
         print('Token: $token');
-        setToken(token);
-        setToken(token); // Save token locally
+        // setToken(token);
+        // setToken(token); // Save token locally
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -420,3 +438,35 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 }
+
+Future<void> _fetchProfileData(String? token , String? UserId) async {
+    // Prepare the headers
+    // print(CachHelper.getToken());
+    Map<String, String> headers = {
+      "Authorization": "Bearer ${token}",
+      "Accept": "application/json",
+    };
+
+    String apiUrl =
+        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/users/${UserId}';
+
+    // Make the HTTP GET request to fetch the profile data
+    http.Response response = await http.get(
+      Uri.parse(apiUrl),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+        CachHelper.setFirstName(userInfo: responseData["name"]);
+        CachHelper.setPhone(userInfo: responseData["phone"]);
+         CachHelper.setGender(userInfo: responseData["gender"]);
+         CachHelper.setBirthDate(userInfo: responseData["DOB"]);
+         CachHelper.setPhoto(userInfo: responseData["image"]);
+         print("UserImage:${responseData['image']}");
+         print("fetched");
+        // Update other fields if needed
+      }else {
+      print("Error: ${response.body}");
+    }
+  }

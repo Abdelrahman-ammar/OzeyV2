@@ -61,220 +61,217 @@ class MyHomePage extends StatelessWidget {
           } else if (index == 8) {
             songName = 'Night Sky';
             artistName = 'Retrosoft';
-          } else if (index == 9) {
-            songName = 'Diva';
-            artistName = 'Sharmoofers';
-          } else if (index == 10) {
+          }else if (index == 9) {
             songName = 'Mandala';
             artistName = 'Lhokanda';
-          } else if (index == 11) {
+          } else if (index == 10) {
             songName = 'Seven Swans';
             artistName = 'Al Petteway';
-          } else if (index == 12) {
+          } else if (index == 11) {
             songName = 'Mental Health Matters';
             artistName = 'Calm Guitar Music';
-          } else if (index == 13) {
+          } else if (index == 12) {
             songName = 'Ups and Downs';
             artistName = 'Martin Klem';
-          } else if (index == 14) {
+          } else if (index == 13) {
             songName = 'Blossoming Tree';
             artistName = 'Wanderer\'s Trove';
-          } else if (index == 15) {
+          } else if (index == 14) {
             songName = 'Mornings';
             artistName = 'Sebastian Winskog';
-          } else if (index == 16) {
+          } else if (index == 15) {
             songName = 'Moraira Coast';
             artistName = 'Let It Bloom';
-          } else if (index == 17) {
+          } else if (index == 16) {
             songName = 'Shapes of Brightness';
             artistName = 'Tales of Vibrations';
-          } else if (index == 18) {
+          } else if (index == 17) {
             songName = 'I Love You Lord';
             artistName = 'Piano Praises';
-          } else if (index == 19) {
+          } else if (index == 18) {
             songName = 'Author Of Salvation';
             artistName = 'Piano Praises';
-          } else if (index == 20) {
+          } else if (index == 19) {
             songName = 'Goldilocks';
             artistName = 'Dreaming Fairy';
-          } else if (index == 21) {
+          } else if (index == 20) {
             songName = 'Dandelion';
             artistName = 'Elias Bergman';
-          } else if (index == 22) {
+          } else if (index == 21) {
             songName = 'The Kiss';
             artistName = 'Jacques Blacque';
-          } else if (index == 23) {
+          } else if (index == 22) {
             songName = 'Rêverie';
             artistName = 'Geert Veneklaas';
-          } else if (index == 24) {
+          } else if (index == 23) {
             songName = 'Hope';
             artistName = 'Geert Veneklaas';
-          } else if (index == 25) {
+          } else if (index == 24) {
             songName = 'Locus';
             artistName = 'Sacha Hoedemaker';
-          } else if (index == 26) {
+          } else if (index == 25) {
             songName = 'Oak Island';
             artistName = 'Emma Jackson';
-          } else if (index == 27) {
+          } else if (index == 26) {
             songName = 'A Brand New Day';
             artistName = 'Manuel Zito';
-          } else if (index == 28) {
+          } else if (index == 27) {
             songName = 'House of Cards';
             artistName = 'Daan Duijf';
-          } else if (index == 29) {
+          } else if (index == 28) {
             songName = 'My Little Spring';
             artistName = 'Leonard Lehmann';
-          } else if (index == 30) {
+          } else if (index == 29) {
             songName = 'Glance';
             artistName = 'Rasmus H Thomsen';
-          } else if (index == 31) {
+          } else if (index == 30) {
             songName = 'Shine';
             artistName = 'Rasmus H Thomsen';
-          } else if (index == 32) {
+          } else if (index == 31) {
             songName = 'Diaphanous';
             artistName = 'Arden Brooks';
-          } else if (index == 33) {
+          } else if (index == 32) {
             songName = 'Wish';
             artistName = 'Domi Nova';
-          } else if (index == 34) {
+          } else if (index == 33) {
             songName = 'Shelter Of My Mind';
             artistName = 'Domi Nova';
-          } else if (index == 35) {
+          } else if (index == 34) {
             songName = 'To Be Loved';
             artistName = 'Day Blue';
-          } else if (index == 36) {
+          } else if (index == 35) {
             songName = 'Lumenary';
             artistName = 'MettaForm';
-          } else if (index == 37) {
+          } else if (index == 36) {
             songName = 'Saraband';
             artistName = 'Phillip Lester';
-          } else if (index == 38) {
+          } else if (index == 37) {
             songName = 'Estudio No. 1';
             artistName = 'William Wilson';
-          } else if (index == 39) {
+          } else if (index == 38) {
             songName = 'Saraband';
             artistName = 'Phillip Lester';
-          } else if (index == 40) {
+          } else if (index == 39) {
             songName = 'Forest Creek Tune';
             artistName = 'Lhokanda';
-          } else if (index == 41) {
+          } else if (index == 40) {
             songName = 'Di Himl';
             artistName = 'Beymer';
-          } else if (index == 42) {
+          } else if (index == 41) {
             songName = 'Blumen';
             artistName = 'Beymer';
-          } else if (index == 43) {
+          } else if (index == 42) {
             songName = 'Rebuild';
             artistName = 'Toni Fairbanks';
-          } else if (index == 44) {
+          } else if (index == 43) {
             songName = 'Lighthouse';
             artistName = 'Time Sphere';
-          } else if (index == 45) {
+          } else if (index == 44) {
             songName = 'Floating Away';
             artistName = 'Time Sphere';
-          } else if (index == 46) {
+          } else if (index == 45) {
             songName = 'Calming Waves';
             artistName = 'turquoise waters';
-          } else if (index == 47) {
+          } else if (index == 46) {
             songName = 'Sacral Chakra Balancer';
             artistName = 'Healing Solfeggio Frequencies';
-          } else if (index == 48) {
+          } else if (index == 47) {
             songName = 'On Plateau';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 49) {
+          } else if (index == 48) {
             songName = 'Estudiar y Meditar - Remastered';
+            artistName = 'MusicoterapiaTeam';
+          } else if (index == 49) {
+            songName = 'Trust Me';
             artistName = 'MusicoterapiaTeam';
           } else if (index == 50) {
-            songName = 'Trust Me';
-            artistName = 'MusicoterapiaTeam';
-          } else if (index == 51) {
             songName = 'Bien-être';
             artistName = 'Yzalune';
-          } else if (index == 53) {
+          } else if (index == 51) {
             songName = 'Floating Peace';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 54) {
+          } else if (index == 52) {
             songName = 'Ethereal Serenade';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 55) {
+          } else if (index == 53) {
             songName = 'Geshe';
             artistName = 'Jordan Henderson';
-          } else if (index == 56) {
+          } else if (index == 54) {
             songName = 'Bardo';
             artistName = 'Jordan Henderson';
-          } else if (index == 57) {
+          } else if (index == 55) {
             songName = 'Dulce Serenidad';
             artistName = ' Yzalune';
-          } else if (index == 58) {
+          } else if (index == 56) {
             songName = 'Rêve';
             artistName = ' Yzalune';
-          } else if (index == 59) {
+          } else if (index == 57) {
             songName = 'Renewal';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 60) {
+          } else if (index == 58) {
             songName = 'Estudiar y Meditar - Remastered';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 61) {
+          } else if (index == 59) {
             songName = 'Sìth';
             artistName = 'Jordan Henderson';
-          } else if (index == 62) {
+          } else if (index == 60) {
             songName = 'Geshe';
             artistName = 'Jordan Henderson';
-          } else if (index == 63) {
+          } else if (index == 61) {
             songName = 'Alaya';
             artistName = 'Jordan Henderson';
-          } else if (index == 64) {
+          } else if (index == 62) {
             songName = 'Trust Me';
             artistName = 'MusicoterapiaTeam';
-          } else if (index == 65) {
+          } else if (index == 63) {
             songName = 'Bien-être';
             artistName = 'Yzalune';
-          } else if (index == 66) {
+          } else if (index == 64) {
             songName = 'Starboy';
             artistName = 'The Weeknd';
-          } else if (index == 67) {
+          } else if (index == 65) {
             songName = 'YAZMEELY';
             artistName = 'Muhab';
-          } else if (index == 68) {
+          } else if (index == 66) {
             songName = 'Cut To The Feeling';
             artistName = 'Carly Rae Jepsen';
-          } else if (index == 68) {
+          } else if (index == 67) {
             songName = 'سورة طه';
             artistName = 'Sherif Mostafa';
-          } else if (index == 69) {
+          } else if (index == 68) {
             songName = 'سورة النبأ كاملة';
             artistName = 'عبدالرحمن مسعد';
-          } else if (index == 70) {
+          } else if (index == 69) {
             songName = 'سورة الملك';
             artistName = 'Islam Sobhi';
-          } else if (index == 71) {
+          } else if (index == 70) {
             songName = 'سورة البقرة';
             artistName = 'Islam Sobhi';
-          } else if (index == 72) {
+          } else if (index == 71) {
             songName = 'سورة الحجر';
             artistName = 'Hazza Al Blushi';
-          } else if (index == 73) {
+          } else if (index == 72) {
             songName = 'Surat Al Dukhan';
             artistName = 'Hazza Al Blushi';
-          } else if (index == 74) {
+          } else if (index == 73) {
             songName = 'Surah Al Kafirun';
             artistName = 'Al Sheikh Abdul Baset Abdul Samad';
-          } else if (index == 75) {
+          } else if (index == 74) {
             songName = 'Surah Al Humazah';
             artistName = 'Al Sheikh Abdul Baset Abdul Samad';
-          } else if (index == 76) {
+          } else if (index == 75) {
             songName = 'Surah Al Insyirah';
             artistName = 'Salim Bahanan';
-          }else if (index == 77) {
+          }else if (index == 76) {
             songName = 'Surah an Naba';
             artistName = 'Salim Bahanan';
-          }else if (index == 78) {
+          }else if (index == 77) {
             songName = 'Surah Ad Dhuha';
             artistName = 'Salim Bahanan';
-          }else if (index == 79) {
+          }else if (index == 78) {
             songName = 'Surah an Nas';
             artistName = 'Salim Bahanan';
-          }else if (index == 80) {
+          }else if (index == 79) {
             songName = 'Surah Al Anbiya';
             artistName = 'Omar Hisham';
           }

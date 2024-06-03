@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,10 +17,12 @@ class IndextaskCubit extends Cubit<IndextaskState> {
   IndextaskCubit() : super(IndextaskInitial());
 
   Future<void> fetchData() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     emit(IndextaskLoading()); // Emit loading state
 
     final response = await http.get(

@@ -50,47 +50,50 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-
-    
-    _fetchProfileData();
+    fullNameController.text = CachHelper.getFirstName() ?? " ";
+    phoneNumberController.text = CachHelper.getPhone() ?? " ";
+    dobController.text = CachHelper.getBirthDate() ?? " ";
+    // _selectedImage = CachHelper.getPhoto() as io.File?;
+    // _fetchProfileData();
     selectedGender = null;
   }
 
-  Future<void> _fetchProfileData() async {
-    // Prepare the headers
-    Map<String, String> headers = {
-      "Authorization": "Bearer ${widget.token}",
-      "Accept": "application/json",
-    };
+  // Future<void> _fetchProfileData() async {
+  //   // Prepare the headers
+  //   // print(CachHelper.getToken());
+  //   Map<String, String> headers = {
+  //     "Authorization": "Bearer ${widget.token}",
+  //     "Accept": "application/json",
+  //   };
 
-    String apiUrl =
-        'https://mental-health-ef371ab8b1fd.herokuapp.com/api/users/${widget.userId}';
+  //   String apiUrl =
+  //       'https://mental-health-ef371ab8b1fd.herokuapp.com/api/users/${widget.userId}';
 
-    // Make the HTTP GET request to fetch the profile data
-    http.Response response = await http.get(
-      Uri.parse(apiUrl),
-      headers: headers,
-    );
+  //   // Make the HTTP GET request to fetch the profile data
+  //   http.Response response = await http.get(
+  //     Uri.parse(apiUrl),
+  //     headers: headers,
+  //   );
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = json.decode(response.body);
+  //   if (response.statusCode == 200) {
+  //     Map<String, dynamic> responseData = json.decode(response.body);
 
-      setState(() {
-        fullNameController.text = responseData['name'] ?? '';
-        // fullNameController.text = CachHelper.getFirstName();
-        phoneNumberController.text = responseData['phone'] ?? '';
-        selectedGender = responseData['gender'].toLowerCase(); //Abdo5 there was a mismatch between what was returned from the API and the dropdownlistMenuItems
-        dobController.text = responseData['DOB'] ?? '';
-        _selectedImage = io.File(responseData['image']);
+  //     setState(() {
+  //       fullNameController.text = responseData['name'] ?? '';
+  //       // fullNameController.text = CachHelper.getFirstName();
+  //       phoneNumberController.text = responseData['phone'] ?? '';
+  //       selectedGender = responseData['gender'].toLowerCase(); //Abdo5 there was a mismatch between what was returned from the API and the dropdownlistMenuItems
+  //       dobController.text = responseData['DOB'] ?? '';
+  //       _selectedImage = io.File(responseData['image']);
          
-        // Update other fields if needed
-      });
-      print("this is the  $_selectedImage");
-      print(_selectedImage!.path); 
-    } else {
-      print("Error: ${response.body}");
-    }
-  }
+  //       // Update other fields if needed
+  //     });
+  //     print("this is the  $_selectedImage");
+  //     print(_selectedImage!.path); 
+  //   } else {
+  //     print("Error: ${response.body}");
+  //   }
+  // }
 
 
 //  Future<void> _saveProfile({
@@ -210,7 +213,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Map<String, dynamic> responseData = response.data;
       showSnackBar(context, responseData['message']);
       print('sddsad');
-
+      CachHelper.setFirstName(userInfo: name);
+      CachHelper.setPhone(userInfo: phone);
+      CachHelper.setBirthDate(userInfo: dob);
       // setState(() {
         // _uploadedImageUrl = responseData["image"];
         // _selectedImage = null;
@@ -365,7 +370,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               backgroundImage: _selectedImage != null
                               ? FileImage(_selectedImage!)
                               : (_uploadedImageUrl != null
-                              ? NetworkImage(_uploadedImageUrl!) as ImageProvider
+                              ? NetworkImage(CachHelper.getPhoto()!) as ImageProvider
                               : const AssetImage("images/photo_2024-01-17_04-23-53-removebg-preview.png")),
                               radius: 50,
                               ),
@@ -507,7 +512,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
     Future<void> _logout() async {
-
+      print("logging");
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
@@ -523,12 +528,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200){
       final dynamic responseData = jsonDecode(response.body);
+      
       Navigator.push(
         context,
         MaterialPageRoute(
         builder: (context) => sotheeScreen()));
         showSnackBar(context, responseData["message"]);
-
+        CachHelper.clearAll();
       }
   }
 
@@ -615,6 +621,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ? (value) {
                 setState(() {
                   selectedGender = value!;
+
                 });
               }
             : null,

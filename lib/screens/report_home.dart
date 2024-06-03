@@ -9,6 +9,7 @@ import 'package:mapfeature_project/screens/stacked.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 
 class Report extends StatefulWidget {
   const Report({Key? key}) : super(key: key);
@@ -389,12 +390,15 @@ class _ReportState extends State<Report> {
     );
   }
 
-  fetchCircleDataLast30Days() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
 
+  fetchCircleDataLast30Days() async {
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+
+    // String? token = prefs.getString('token');
+    String? token =CachHelper.getToken();
+    // String? id = prefs.getString('id');
+    String id = CachHelper.getUserId();
     final response = await http.get(
       Uri.parse(
           'https://mental-health-ef371ab8b1fd.herokuapp.com/api/taskalast30days/$id'),
@@ -427,11 +431,12 @@ class _ReportState extends State<Report> {
   }
 
   fetchCircleDataLast7Days() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
-    
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? id = CachHelper.getUserId();
+    String? token = CachHelper.getToken();
     // print(token);
     // print(id);
     // print("ttttttttttttttttttttttttttttttttt");

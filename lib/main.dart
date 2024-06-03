@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 
 import 'package:mapfeature_project/models/music.dart';
 import 'package:mapfeature_project/screens/MapScreen.dart';
@@ -34,6 +35,11 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalNotifications.init();
+  try {
+    await CachHelper.init();
+  } catch (e) {
+    print("CacheHelper initialization failed: $e");
+  }
 
   LocalNotifications.onClickNotification.stream.listen((payload) {
     if (payload == "Chat bot") {
@@ -47,6 +53,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
+  await CachHelper.init();
   runApp(MyApp());
 }
 
@@ -78,15 +85,13 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '4ngBvPg9frf9pq6pJsZ2eF'),
       Music(trackId: '039xzKjVgqdnmoUOCXuEI2'),
       Music(trackId: '30MQSL5JdjYhhWQKwudYt3'),
-      Music(trackId: '5PMC9hoPaC1dixpvpcbV38'),
+      Music(trackId: '5PMC9hoPaC1dixpvpcbV38'), //8
       Music(trackId: '1aeKotbZ2wBYuOspDawtwo'),
-      Music(trackId: '479py8vgzAA5yBI2cpG0mf'),
+      Music(trackId: '7bnUdrfAos6Co3IyR1Id6z'),
       Music(trackId: '07QsOZfpuoSgPFXr0r5Ugj'),
-      Music(trackId: '1Ab0nibox49aGAaiQ7EnjR'),
       Music(trackId: '6WLF4Ckt5UKqzmF8MKA04s'),
       Music(trackId: '5wSOHIQZQQO5khFcjATSJC'),
       Music(trackId: '0dkg15gHdh9NiauS5p5A4Q'),
-      Music(trackId: '2FLK3ubX0vLLfbU5ViuJTN'),
       Music(trackId: '0nwLGUFABAh3gDYvfWhydj'),
       Music(trackId: '5aVgYTCatT8LiNZcpSqmsF'),
       Music(trackId: '6neX7UddFHWZPfnMdwlYGy'),
@@ -97,8 +102,9 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '2Qe6G6xhpXOrmb38xpknJo'),
       Music(trackId: '37K1OCMlu7tBZx3lz6hGP6'),
       Music(trackId: '6mg7SM5eDp6HzTBwoqkQIn'),
-      Music(trackId: '3uK3G29no1DduH1wpVXXtc'),
-      Music(trackId: '3T2eXi6Ivi1ZO7pInx3PVC'),
+      Music(trackId: '3uK3G29no1DduH1wpVXXtc'),//Oak Island
+      // Music(trackId: '3uK3G29no1DduH1wpVXXtc'),
+      Music(trackId: '3T2eXi6Ivi1ZO7pInx3PVC'),//Brand New Day
       Music(trackId: '4Ht8HnNrI7sAYqjybljyHr'),
       Music(trackId: '46Smq12dhbzHYbbSHTZXNR'),
       Music(trackId: '0gknUCR8bue9XTlRjrJeb4'),
@@ -106,8 +112,7 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '3xdDoLDyvsMgyl1BwVaZ5E'),
       Music(trackId: '6xld6bFu5ST7nickcSK1lP'),
       Music(trackId: '1UhZB9MRMqes7At9ZBtuYb'),
-      Music(trackId: '1QIarBiWF3tRs6a1CXzN5w'),
-      Music(trackId: '4KiuT6lph1fSy19AFjHwYE'),
+      Music(trackId: '4KiuT6lph1fSy19AFjHwYE'),//To be loved
       Music(trackId: '41HAiAdjlQV99bxgoZQJic'),
       Music(trackId: '38wJYcJAUKYzRY7MOuA4RZ'),
       Music(trackId: '0jEcYgYvVUCWUSqzbgjQz0'),
@@ -137,7 +142,7 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '00TZ1ds7glf3qrIiN51Uic'),
       Music(trackId: '6Bj4giIhhImr801fRVMkwa'),
       Music(trackId: '4gpjTvrSADGgcxBhgLkzOE'),
-      Music(trackId: '7MXVkk9YMctZqd1Srtv4MB'),
+      Music(trackId: '7MXVkk9YMctZqd1Srtv4MB'),//Kafrun
       Music(trackId: '3WOiSsqfXPZAtGTr2PFj6S'),
       Music(trackId: '11dFghVXANMlKmJXsNCbNl'),
       Music(trackId: '6V74b74rZQQNyQ8VHq6IKR'),
@@ -146,11 +151,11 @@ class _MyAppState extends State<MyApp> {
       Music(trackId: '50pKOEBQqfsEJgA1cyXazT'),
       Music(trackId: '3lVAkecZVvyVRN53fDEASP'),
       Music(trackId: '2HnZ5pp0T0vhjMW8m2x6Hs'),
-      Music(trackId: '1Eu0iGg92tT7GU6ricxr4i'),
       Music(trackId: '7KRICZbYxrxBrBTClIZcBo'),
+      // Music(trackId: '7KRICZbYxrxBrBTClIZcBo'),
       Music(trackId: '2BAeqkE0AKWTajWXbNUUyz'),
-      Music(trackId: '37i9dQZF1E4oFfEeHFLKe'),
       Music(trackId: '36Cjfu2S4G6jHkpYmJqUYs'),
+      // Music(trackId: '36Cjfu2S4G6jHkpYmJqUYs'),
       Music(trackId: '5NCtQmyp47aPi0luJKLwPm'),
       Music(trackId: '29CvytNz97GUizS5nepd1j'),
       Music(trackId: '0QVS7EEH4VPQCuBQLkGdNf'),
@@ -174,7 +179,7 @@ class _MyAppState extends State<MyApp> {
       home: MyHomePage(playlist: playlist),
       routes: {
         'login': (context) => const LogInScreen(),
-        'signup': (context) => const SignUpScreen(),
+        'signup': (context) => const SignUpScreen(),  
         // 'map':(context) {
           // final token = ModalRoute.of(context)!.settings.arguments as String;
         // return  MapScreen(token: token,);},

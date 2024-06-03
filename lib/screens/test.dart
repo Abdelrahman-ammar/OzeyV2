@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -66,9 +67,11 @@ class _TestScreenState extends State<TestScreen> {
     required int cognitiveScore,
     required int somaticScore,
   }) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
 
     var headers = {
       'Accept': 'application/json',

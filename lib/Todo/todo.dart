@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mapfeature_project/Todo/databasehelper.dart';
 import 'package:mapfeature_project/Todo/event_model.dart';
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -68,10 +69,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> addTask() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     TimeOfDay startTime = TimeOfDay(
         hour: _selectedStartTime.hour, minute: _selectedStartTime.minute);
     TimeOfDay endTime =
@@ -110,10 +114,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
   allTasks() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    String? token = prefs.getString('token');
-    String? id = prefs.getString('id');
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // String? token = prefs.getString('token');
+    // String? id = prefs.getString('id');
+    String? token = CachHelper.getToken();
+    String? id = CachHelper.getUserId();
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'

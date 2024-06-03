@@ -12,8 +12,9 @@ abstract class CachHelper {
   static const String _birthDate = 'birthDate';
   static const String _photo = 'photo';
   static const String _userId = 'userId'; 
+  static const String _gender = 'gender';
 
-  static init() async {
+  static Future<void> init() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
@@ -27,6 +28,15 @@ abstract class CachHelper {
 
   static Future<void> clearToken() {
     return sharedPreferences.remove(_token);
+  }
+
+  static Future<void> setGender({required String userInfo}){
+    return sharedPreferences.setString(_gender, userInfo);
+  }
+
+  
+  static String getGender(){
+    return sharedPreferences.getString(_gender) ?? ' ';
   }
 
   //  userId
