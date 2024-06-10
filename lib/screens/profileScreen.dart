@@ -13,7 +13,7 @@ import 'dart:io' as io;
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mapfeature_project/screens/soothe_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:mapfeature_project/helper/cach_helper.dart';
 import '../helper/show_snack_bar.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -168,14 +168,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Map<String, String> headers = {
     'Accept': 'application/json',
-    'Authorization': 'Bearer ${widget.token}',
+    'Authorization': 'Bearer ${CachHelper.getToken()}',
   };
 
   String url = 'https://mental-health-ef371ab8b1fd.herokuapp.com/api/user/update_profile';
 
   dio.FormData formData = dio.FormData.fromMap({
     // 'image': imageFile, // Use 'file' as the key for the image
-    'id': widget.userId,
+    'id': CachHelper.getUserId(),
     'name': name,
     'phone': phone,
     'gender': gender,
